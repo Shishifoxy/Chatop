@@ -3,6 +3,7 @@ package com.openclassroom.chatop.controllers;
 import com.openclassroom.chatop.dto.UserDto;
 import com.openclassroom.chatop.entity.User;
 import com.openclassroom.chatop.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ public class UsersController {
     @Autowired
     private UserService userService;
 
+    @Operation(summary = "Get all users")
     @GetMapping("/{id}")
     public ResponseEntity  <UserDto> getUserById(Long id) {
         this.userService.getUserById(id);

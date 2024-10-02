@@ -38,7 +38,6 @@ public class Rental {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
     @OneToMany(mappedBy = "rental", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Message> messages;
 
