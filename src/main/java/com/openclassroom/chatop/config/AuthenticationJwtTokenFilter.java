@@ -17,12 +17,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class AuthenticationJwtTokenFilter extends OncePerRequestFilter {
 
     private final JwtDecoder jwtDecoder;
-    private final JwtEncoder jwtEncoder;
     private final UserDetailsService userDetailsService;
 
     public AuthenticationJwtTokenFilter(JwtDecoder jwtDecoder, JwtEncoder jwtEncoder, UserDetailsService userDetailsService) {
         this.jwtDecoder = jwtDecoder;
-        this.jwtEncoder = jwtEncoder;
         this.userDetailsService = userDetailsService;
     }
 

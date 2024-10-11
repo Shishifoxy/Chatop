@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### SECURITY ###
+.env.dev
+.env.prod
