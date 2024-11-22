@@ -7,7 +7,9 @@ import com.openclassroom.chatop.mappers.UserMapper;
 import com.openclassroom.chatop.repository.UserRepository;
 import com.openclassroom.chatop.services.AuthService;
 import com.openclassroom.chatop.services.JWTService;
+import com.openclassroom.chatop.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "Auth", description = "Endpoints for authentication")
 public class AuthController {
 
     @Autowired
@@ -29,7 +32,7 @@ public class AuthController {
     @Autowired
     private UserMapper userMapper;
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
     private JWTService jwtService;
@@ -47,7 +50,7 @@ public class AuthController {
     @Operation(summary = "Login")
     @PostMapping("/login")
     public String login(@RequestBody LoginDto login) {
-        Optional<User> user = this.userRepository.findByEmail(login.getEmail());
+        Optional<User> user = this.userService.getUserByEmail(login.getEmail());
         if (user.isEmpty()) {
             return "User not found";
         }
@@ -67,6 +70,6 @@ public class AuthController {
 
     public UserDto me() {
         var email = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userMapper.toDto(userRepository.findByEmail(email).get());
+        return userMapper.toDto(userService.getUserByEmail(email).get());
     }
 }

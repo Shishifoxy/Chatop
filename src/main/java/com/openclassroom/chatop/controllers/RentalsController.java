@@ -5,7 +5,9 @@ import com.openclassroom.chatop.entity.Rental;
 import com.openclassroom.chatop.entity.User;
 import com.openclassroom.chatop.repository.UserRepository;
 import com.openclassroom.chatop.services.RentalsService;
+import com.openclassroom.chatop.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,11 +20,13 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/rentals")
+@Tag(name = "Rentals", description = "Endpoints for rentals")
+
 public class RentalsController {
 @Autowired
 private RentalsService rentalService;
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
     @GetMapping
     public ResponseEntity <List<RentalsDto>> getRentals() {
         List<RentalsDto> rental = this.rentalService.getRentals();
@@ -40,7 +44,7 @@ private RentalsService rentalService;
     @PostMapping
     public ResponseEntity <RentalsDto> addRental(@ModelAttribute RentalsDto rental) {
         var email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<User> user = this.userRepository.findByEmail(email);
+        Optional<User> user = this.userService.getUserByEmail(email);
         if (user.isPresent()) {
             rental.setOwnerId(user.get().getId());
         } else {

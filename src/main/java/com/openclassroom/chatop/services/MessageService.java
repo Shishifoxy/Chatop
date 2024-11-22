@@ -20,27 +20,9 @@ public class MessageService {
     @Autowired
     private MessageMapper messageMapper;
 
-    public List<MessageDto> getMessages() {
-        List<Message> messages = messageRepository.findAll();
-        return messages.stream()
-                .map(messageMapper::toDto)
-                .collect(Collectors.toList());
-    }
 
     public void saveMessage(MessageDto message) {
         this.messageRepository.save(messageMapper.toEntity(message));
     }
 
-
-    public void deleteMessage(Long id) {
-        this.messageRepository.deleteById(id);
-    }
-
-    public void updateMessage(MessageDto message) {
-        this.messageRepository.save(messageMapper.toEntity(message));
-    }
-
-    public void getMessageById(Long id) {
-        this.messageRepository.findById(id);
-    }
 }

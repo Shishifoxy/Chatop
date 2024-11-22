@@ -6,7 +6,9 @@ import com.openclassroom.chatop.entity.Message;
 import com.openclassroom.chatop.entity.User;
 import com.openclassroom.chatop.repository.UserRepository;
 import com.openclassroom.chatop.services.MessageService;
+import com.openclassroom.chatop.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,11 +22,13 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/messages")
+@Tag(name = "Messages", description = "Endpoints for messages")
+
 public class MessagesController {
 @Autowired
 private MessageService messageService;
 @Autowired
-private UserRepository userRepository;
+private UserService userService;
 
 
 @Operation(summary = "Get all messages")
@@ -33,7 +37,7 @@ private UserRepository userRepository;
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity <MessageDto> addMessage(@RequestBody MessageDto message,  HttpServletRequest request) {
         var email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<User> user = this.userRepository.findByEmail(email);
+        Optional<User> user = this.userService.getUserByEmail(email);
         if (user.isPresent()) {
             message.setUserId(user.get().getId());
         } else {
