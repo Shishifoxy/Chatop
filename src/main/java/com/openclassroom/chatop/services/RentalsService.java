@@ -1,9 +1,11 @@
 package com.openclassroom.chatop.services;
 
+import com.openclassroom.chatop.dto.RentalPictureDto;
 import com.openclassroom.chatop.dto.RentalsDto;
 import com.openclassroom.chatop.entity.Rental;
 import com.openclassroom.chatop.mappers.RentalsMapper;
 import com.openclassroom.chatop.repository.RentalsRepository;
+import jakarta.transaction.Transactional;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,11 +23,27 @@ private RentalsRepository rentalsRepository;
 @Autowired
 private RentalsMapper rentalsMapper;
 
-    public RentalsDto saveRental(RentalsDto rental) {
-        return rentalsMapper.toDto(this.rentalsRepository.save(rentalsMapper.toEntity(rental)));
+@Autowired
+private UploadPictureService pictureService;
+
+    private static String RENTAL_FOLDER = "rental";
+
+
+    @Transactional
+    public RentalsDto saveRental(RentalPictureDto rentalPictureDto) throws Exception {
+        final Rental rental = rentalsMapper.toEntity(rentalPictureDto);
+        final String url = pictureService.uploadFile(
+                rentalPictureDto.getOwnerId(),
+                rentalPictureDto.getFile()
+        );
+        rental.setPicture(url);
+
+        final Rental rentalSaved = this.rentalsRepository.save(rental);
+        return rentalsMapper.toDto(rentalSaved);
     }
 
-    public List<RentalsDto> getRentals() {
+
+        public List<RentalsDto> getRentals() {
         List<Rental> rentals = this.rentalsRepository.findAll();
         return rentals.stream()
                 .map(rentalsMapper::toDto)

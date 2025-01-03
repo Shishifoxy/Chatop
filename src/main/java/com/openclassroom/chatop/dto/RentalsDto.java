@@ -1,6 +1,8 @@
 package com.openclassroom.chatop.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,10 +15,13 @@ public class RentalsDto {
     private BigDecimal price;
     private String picture;
     private String description;
-    private Long ownerId; // Simplified owner representation as just the owner ID
+    @JsonProperty("owner_id")
+    private Long ownerId;
+    @JsonProperty("created_at")
     private LocalDateTime createdAt;
+    @JsonProperty("updated_at")
     private LocalDateTime updatedAt;
-    private List<Long> messageIds; // Simplified messages representation as just the message IDs
+    private List<Long> messageIds;
 
     // Getters and Setters
     public Long getId() {

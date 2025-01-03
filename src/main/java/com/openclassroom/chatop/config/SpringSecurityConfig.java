@@ -58,15 +58,18 @@ public class SpringSecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(
                         authorizationManagerRequestMatcherRegistry -> authorizationManagerRequestMatcherRegistry
-                                .requestMatchers(
-                                        new AntPathRequestMatcher("/api/auth/login", HttpMethod.POST.toString()),
-                                        new AntPathRequestMatcher("/api/auth/register", HttpMethod.POST.toString()),
-                                        new AntPathRequestMatcher("/v3/api-docs/**", HttpMethod.GET.toString()),
-                                        new AntPathRequestMatcher("/swagger*/**", HttpMethod.GET.toString())
-                                )
+                                .requestMatchers("/api/auth/register",
+                                        "/api/auth/login",
+                                        "/v3/api-docs/**",
+                                        "/swagger*/**",
+                                        "/swagger-ui/**","/images/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
+                )
+
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())

@@ -1,4 +1,4 @@
-package com.openclassroom.chatop.services;
+package com.openclassroom.chatop.services.interfaces;
 
 import com.openclassroom.chatop.dto.UserDto;
 import com.openclassroom.chatop.mappers.UserMapper;

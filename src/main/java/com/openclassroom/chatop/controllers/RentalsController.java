@@ -1,5 +1,6 @@
 package com.openclassroom.chatop.controllers;
 
+import com.openclassroom.chatop.dto.RentalPictureDto;
 import com.openclassroom.chatop.dto.RentalsDto;
 import com.openclassroom.chatop.entity.Rental;
 import com.openclassroom.chatop.entity.User;
@@ -15,7 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -42,7 +45,7 @@ private RentalsService rentalService;
 
     @Operation(summary = "Add a new rental")
     @PostMapping
-    public ResponseEntity <RentalsDto> addRental(@ModelAttribute RentalsDto rental) {
+    public ResponseEntity <RentalsDto> addRental(@ModelAttribute RentalPictureDto rental) throws Exception {
         var email = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> user = this.userService.getUserByEmail(email);
         if (user.isPresent()) {
@@ -57,8 +60,10 @@ private RentalsService rentalService;
     @PutMapping(path ="/",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity <RentalsDto> updateRental(@ModelAttribute RentalsDto rental) {
+    public ResponseEntity <Map<String, String>> updateRental(@ModelAttribute RentalsDto rental) {
         this.rentalService.updateRental(rental);
-        return ResponseEntity.ok(rental);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Rental updated !");
+        return ResponseEntity.ok(response);
     }
 }

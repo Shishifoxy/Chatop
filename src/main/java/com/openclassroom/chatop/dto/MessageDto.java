@@ -1,12 +1,18 @@
 package com.openclassroom.chatop.dto;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDateTime;
 
 public class MessageDto {
 
     private Long id;
+    @NotNull(message = "Rental ID is required.")
     private Long rentalId;
+    @NotNull(message = "Rental ID is required.")
     private Long userId;
+    @NotEmpty(message = "Message content cannot be empty.")
     private String message;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
