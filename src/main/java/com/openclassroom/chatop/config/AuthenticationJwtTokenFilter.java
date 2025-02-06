@@ -28,11 +28,13 @@ public class AuthenticationJwtTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        String jwt = resolveToken(request);
-        if (jwt != null && validateToken(jwt)) {
-            var userDetails = userDetailsService.loadUserByUsername(getUsernameFromJwt(jwt));
-            var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        if (!request.getRequestURI().startsWith("/images/")) {
+            String jwt = resolveToken(request);
+            if (jwt != null && validateToken(jwt)) {
+                var userDetails = userDetailsService.loadUserByUsername(getUsernameFromJwt(jwt));
+                var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
         }
         filterChain.doFilter(request, response);
     }

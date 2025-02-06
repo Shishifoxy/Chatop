@@ -1,5 +1,6 @@
 package com.openclassroom.chatop.services;
 
+import com.openclassroom.chatop.dto.RentalCreationDto;
 import com.openclassroom.chatop.dto.RentalPictureDto;
 import com.openclassroom.chatop.dto.RentalsDto;
 import com.openclassroom.chatop.entity.Rental;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 @Data
 @Service
@@ -30,21 +32,19 @@ private UploadPictureService pictureService;
 
 
     @Transactional
-    public RentalsDto saveRental(RentalPictureDto rentalPictureDto) throws Exception {
-        final Rental rental = rentalsMapper.toEntity(rentalPictureDto);
-        final String url = pictureService.uploadFile(
-                rentalPictureDto.getOwnerId(),
-                rentalPictureDto.getFile()
+    public RentalsDto saveRental(RentalCreationDto rentalCreationDto) throws Exception {
+        Rental rental = rentalsMapper.toEntity(rentalCreationDto);
+        rental.getOwner().getId();
+        String pictureUrl = pictureService.uploadFile(
+                rentalCreationDto.getOwnerId(),
+                rentalCreationDto.getPicture()
         );
-        rental.setPicture(url);
-
-        final Rental rentalSaved = this.rentalsRepository.save(rental);
-        return rentalsMapper.toDto(rentalSaved);
+        rental.setPicture(pictureUrl);
+        Rental savedRental = rentalsRepository.save(rental);
+        return rentalsMapper.toDto(savedRental);
     }
-
-
-        public List<RentalsDto> getRentals() {
-        List<Rental> rentals = this.rentalsRepository.findAll();
+    public List<RentalsDto> getRentals() {
+        List<Rental> rentals = rentalsRepository.findAll();
         return rentals.stream()
                 .map(rentalsMapper::toDto)
                 .collect(Collectors.toList());
@@ -54,7 +54,7 @@ private UploadPictureService pictureService;
         this.rentalsRepository.deleteById(id);
     }
 
-    public void updateRental(RentalsDto rental) {
+    public void updateRental(RentalCreationDto rental) {
         this.rentalsRepository.save(rentalsMapper.toEntity(rental));
     }
 

@@ -12,16 +12,16 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/user")
 @Tag(name = "Users", description = "Endpoints for users")
 
 public class UsersController {
     @Autowired
     private UserService userService;
 
-    @Operation(summary = "Get all users")
+    @Operation(summary = "Get users by id")
     @GetMapping("/{id}")
-    public ResponseEntity  <UserDto> getUserById(Long id) {
+    public ResponseEntity  <UserDto> getUserById(@PathVariable Long id) {
         this.userService.getUserById(id);
         return ResponseEntity.ok().build();
     }

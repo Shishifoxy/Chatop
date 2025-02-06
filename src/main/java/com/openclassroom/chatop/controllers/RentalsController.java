@@ -1,5 +1,6 @@
 package com.openclassroom.chatop.controllers;
 
+import com.openclassroom.chatop.dto.RentalCreationDto;
 import com.openclassroom.chatop.dto.RentalPictureDto;
 import com.openclassroom.chatop.dto.RentalsDto;
 import com.openclassroom.chatop.entity.Rental;
@@ -31,9 +32,10 @@ private RentalsService rentalService;
     @Autowired
     private UserService userService;
     @GetMapping
-    public ResponseEntity <List<RentalsDto>> getRentals() {
-        List<RentalsDto> rental = this.rentalService.getRentals();
-        return ResponseEntity.ok(rental);
+    public ResponseEntity <Map<String, List<RentalsDto>>> getRentals() {
+        Map<String, List<RentalsDto>> rentals = new HashMap<>();
+        rentals.put("rentals", this.rentalService.getRentals());
+        return ResponseEntity.ok(rentals);
     }
 
     @Operation(summary = "Get rental by id")
@@ -45,25 +47,31 @@ private RentalsService rentalService;
 
     @Operation(summary = "Add a new rental")
     @PostMapping
-    public ResponseEntity <RentalsDto> addRental(@ModelAttribute RentalPictureDto rental) throws Exception {
+    public ResponseEntity<RentalsDto> addRental(@ModelAttribute RentalCreationDto rentalCreationDto) throws Exception {
         var email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<User> user = this.userService.getUserByEmail(email);
-        if (user.isPresent()) {
-            rental.setOwnerId(user.get().getId());
-        } else {
+        Optional<User> user = userService.getUserByEmail(email);
+        if (user.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        RentalsDto savedRental = this.rentalService.saveRental(rental);
+        rentalCreationDto.setOwnerId(user.get().getId());
+        RentalsDto savedRental = rentalService.saveRental(rentalCreationDto);
         return ResponseEntity.ok(savedRental);
     }
 
     @PutMapping(path ="/",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity <Map<String, String>> updateRental(@ModelAttribute RentalsDto rental) {
+    public ResponseEntity <Map<String, String>> updateRental(@ModelAttribute RentalCreationDto rental) {
         this.rentalService.updateRental(rental);
         Map<String, String> response = new HashMap<>();
         response.put("message", "Rental updated !");
+        return ResponseEntity.ok(response);
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity <Map<String, String>> deleteRental(@PathVariable Long id) {
+        this.rentalService.deleteRental(id);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Rental deleted !");
         return ResponseEntity.ok(response);
     }
 }
