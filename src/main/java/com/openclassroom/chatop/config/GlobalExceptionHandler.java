@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleOtherExceptions(Exception ex) {
-        ex.printStackTrace(); // Pour afficher l'exception complète dans les logs
+        ex.printStackTrace();
         Map<String, String> error = new HashMap<>();
         error.put("error", "An unexpected error occurred.");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);

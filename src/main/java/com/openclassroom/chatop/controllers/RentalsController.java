@@ -1,11 +1,8 @@
 package com.openclassroom.chatop.controllers;
 
 import com.openclassroom.chatop.dto.RentalCreationDto;
-import com.openclassroom.chatop.dto.RentalPictureDto;
 import com.openclassroom.chatop.dto.RentalsDto;
-import com.openclassroom.chatop.entity.Rental;
 import com.openclassroom.chatop.entity.User;
-import com.openclassroom.chatop.repository.UserRepository;
 import com.openclassroom.chatop.services.RentalsService;
 import com.openclassroom.chatop.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,9 +37,9 @@ private RentalsService rentalService;
 
     @Operation(summary = "Get rental by id")
     @GetMapping("/{id}")
-    public ResponseEntity <RentalsDto> getRentalById(@PathVariable Long id) {
-        this.rentalService.getRentalById(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<RentalsDto> getRentalById(@PathVariable Long id) {
+        RentalsDto rentalDto = this.rentalService.getRentalById(id);
+        return ResponseEntity.ok(rentalDto);
     }
 
     @Operation(summary = "Add a new rental")
@@ -58,14 +55,23 @@ private RentalsService rentalService;
         return ResponseEntity.ok(savedRental);
     }
 
-    @PutMapping(path ="/",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity <Map<String, String>> updateRental(@ModelAttribute RentalCreationDto rental) {
-        this.rentalService.updateRental(rental);
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Rental updated !");
-        return ResponseEntity.ok(response);
+
+    @Operation(summary = "Update an existing rental")
+    @PutMapping("/{id}")
+    public ResponseEntity<RentalsDto> updateRental(
+            @PathVariable Long id,
+            @ModelAttribute RentalCreationDto rentalCreationDto) throws Exception {
+
+        var email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> user = userService.getUserByEmail(email);
+
+        if (user.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        rentalCreationDto.setOwnerId(user.get().getId());
+        RentalsDto updatedRental = rentalService.updateRental(id, rentalCreationDto);
+        return ResponseEntity.ok(updatedRental);
     }
     @DeleteMapping("/{id}")
     public ResponseEntity <Map<String, String>> deleteRental(@PathVariable Long id) {

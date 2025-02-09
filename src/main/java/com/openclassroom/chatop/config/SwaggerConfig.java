@@ -31,6 +31,6 @@ public class SwaggerConfig {
                         .version("v1.0.0"))
                 .components(new Components()
                         .addSecuritySchemes("bearerAuth", bearerAuthScheme))
-                .addSecurityItem(securityRequirement); // Appliquer globalement
+                .addSecurityItem(securityRequirement);
     }
 }

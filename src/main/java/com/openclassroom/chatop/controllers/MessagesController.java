@@ -34,10 +34,8 @@ private MessageService messageService;
 private UserService userService;
 
 
-@Operation(summary = "Get all messages")
-    @PostMapping(path ="/",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+@Operation(summary = "Post a new message")
+    @PostMapping
 public ResponseEntity<Map<String, String>> addMessage(@Valid @RequestBody MessageDto message, HttpServletRequest request) {
         var email = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> user = this.userService.getUserByEmail(email);

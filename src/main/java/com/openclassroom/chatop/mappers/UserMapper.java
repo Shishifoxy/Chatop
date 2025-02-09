@@ -8,9 +8,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    @Mapping(source = "name", target = "name")  // Mapping correct entre "name" et "name"
     UserDto toDto(User user);
 
-    @Mapping(source = "name", target = "name")  // Mapping correct entre "name" et "name"
     User toEntity(UserDto userDto);
 }

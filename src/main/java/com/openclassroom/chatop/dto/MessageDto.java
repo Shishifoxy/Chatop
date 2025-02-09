@@ -1,5 +1,6 @@
 package com.openclassroom.chatop.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
@@ -9,7 +10,9 @@ public class MessageDto {
 
     private Long id;
     @NotNull(message = "Rental ID is required.")
+    @JsonProperty("rental_id")
     private Long rentalId;
+    @JsonProperty("user_id")
     @NotNull(message = "Rental ID is required.")
     private Long userId;
     @NotEmpty(message = "Message content cannot be empty.")

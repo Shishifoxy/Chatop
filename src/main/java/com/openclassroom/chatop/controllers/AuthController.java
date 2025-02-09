@@ -70,7 +70,7 @@ public class AuthController {
     @GetMapping("/me")
 
     public UserDto me() {
-        var email = SecurityContextHolder.getContext().getAuthentication().getName();
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return userMapper.toDto(userService.getUserByEmail(email).get());
     }
 }

@@ -19,13 +19,11 @@ public class UploadPictureService {
             if (picture == null || picture.isEmpty()) {
                 throw new IllegalArgumentException("File is null or empty");
             }
-            // Création des dossiers nécessaires
             if (!Files.exists(root)) {
                 Files.createDirectories(root);
             }
             String filename = ownerId + "_" + UUID.randomUUID() + "_" + picture.getOriginalFilename();
             Files.copy(picture.getInputStream(), root.resolve(filename));
-            // Retourne l'URL d'accès à l'image
             return "http://localhost:3001/images/" + filename;
         } catch (Exception e) {
             throw new Exception("Could not store the file. Error: " + e.getMessage());

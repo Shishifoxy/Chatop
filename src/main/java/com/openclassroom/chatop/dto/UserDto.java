@@ -3,7 +3,7 @@ package com.openclassroom.chatop.dto;
 public class UserDto {
 
     private Long id;
-    private String name;  // Changement de "username" à "name"
+    private String name;
     private String password;
     private String email;
     private String role;
@@ -12,7 +12,7 @@ public class UserDto {
 
     public UserDto(Long id, String name, String password, String email, String role) {
         this.id = id;
-        this.name = name;  // Changement de "username" à "name"
+        this.name = name;
         this.password = password;
         this.email = email;
         this.role = role;
@@ -26,11 +26,11 @@ public class UserDto {
         this.id = id;
     }
 
-    public String getName() {  // Changement de "getUsername" à "getName"
+    public String getName() {
         return name;
     }
 
-    public void setName(String name) {  // Changement de "setUsername" à "setName"
+    public void setName(String name) {
         this.name = name;
     }
 
